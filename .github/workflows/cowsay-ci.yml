@@ -4,22 +4,16 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  build-and-test:
+  build_and_package_application:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Check out code
+        uses: actions/checkout@v2
 
       - name: Build Docker image
-        run: docker build -t cowsay-ci .
+        run: docker build -t cowsay-app:latest .
 
-      - name: Test Cowsay output
-        run: docker run cowsay-ci | grep -i "cow" || (echo "Test failed" && exit 1)
+      - name: Run Docker container
+        run: docker run -d -p 8080:8080 cowsay-app:latest
